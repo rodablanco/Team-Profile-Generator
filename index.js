@@ -3,13 +3,28 @@ const fs = require("fs");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
-const { choices } = require("yargs");
-const Employee = require("./lib/Employee");
+const template = fs.readFileSync("./index.html", 'utf-8')
+const emps = [];
 
-const http = require('http');
-const PORT = 8080;
-const emplyees = [];
+function startProg() {
+    startHtml
 
+}
+const classes = {
+    Engineer,
+    Intern,
+    Manager
+}
+
+const additionalQ = {
+    Engineer: "What is their Github username?",
+    Intern: "What is their School?",
+    Manager: "What is their office number?"
+}
+// const http = require('http');
+// const PORT = 8080;
+const employees = [];
+addEmployee();
 function addEmployee() {
     inquirer
         .prompt([
@@ -40,57 +55,59 @@ function addEmployee() {
             },
         ])
         .then(function ({ name, role, id, email }) {
-            let positionInfo = "";
-            if (role === "Engineer") {
-                positionInfo = "Github username";
-            } else if (role === "Intern") {
-                positionInfo = "school"
-            } else {
-                positionInfo = "office number";
-            }
-            inquirer
-                .prompt([
-                    {
-                        type: 'input',
-                        name: 'positionInfo',
-                        message: "Enter team member's name"
-                    },
-                    {
-                        type: 'list',
-                        name: 'additionalMembers',
-                        message: 'Add another team member?',
-                        choices: ['yes', 'no']
-                    },
+            inquirer.prompt(
+                {
+                    type: "input",
+                    name: "info",
+                    message: additionalQ[role]
+                }
+            )
+                .then(({ info }) => {
+                    const newEmp = new classes[role](name, id, email, info);
+                    employees.push(newEmp)
 
+                    inquirer
+                        .prompt([
+                            {
+                                type: 'list',
+                                name: 'additionalMembers',
+                                message: 'Add another team member?',
+                                choices: ['yes', 'no']
+                            },
+                        ])
+                        .then(({ info, additionalMembers }) => {
+                            if (additionalMembers == "yes") {
+                                addEmployee();
 
-                ])
-                .then(({ positionInfo, additionalMembers }) => {
-                    let newMember;
-                    if (role === "Engineer") {
-                        newMember = new Engineer(name, id, email, positionInfo);
-                    } else if (role === "Intern") {
-                        newMember = new Intern(name, id, email, positionInfo);
-                    } else {
-                        newMember = new Manager(name, id, email, positionInfo);
-                    }
-                    employees.push(additionalMembers);
-                    
+                            } else {
+                                startHtml
+
+                            }
+                        })
                 })
-        })
+        });
 }
 
-// function init() {
-    const handleRequest = (req, res) => {
-        fs.readFile(`${__dirname}/index.html`, (err, data) => {
-            if (err) throw err;
+function startHtml() {
+    template;
+    const empCards = emps.map(info => info.renderHTML()).join('\n')
+    fs.writeFileSync("./test.html", template.replace("{{employees}}", empCards))
 
-            res.writeHead(200, { 'Content-Type' : 'text/html'});
-            res.end(data);
-        });
-    };
-    const server = http.createServer(handleRequest);
+}
 
-    server.listen(PORT, () => {
-        console.log(`Server is listening on PORT: ${PORT}`);
-    })
-// }
+// const handleRequest = (req, res) => {
+//     fs.readFile(`${__dirname}/index.html`, (err, data) => {
+//         if (err) throw err;
+
+//         res.writeHead(200, { 'Content-Type' : 'text/html'});
+//         res.end(data);
+//     });
+// };
+// const server = http.createServer(handleRequest);
+
+// server.listen(PORT, () => {
+//     console.log(`Server is listening on PORT: http://localhost:${PORT}`);
+// })
+
+
+startProg();
