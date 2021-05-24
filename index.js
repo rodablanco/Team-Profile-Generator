@@ -4,7 +4,7 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 const template = fs.readFileSync("./index.html", 'utf-8')
-const emps = [];
+
 
 function startProg() {
     startHtml
@@ -21,8 +21,7 @@ const additionalQ = {
     Intern: "What is their School?",
     Manager: "What is their office number?"
 }
-// const http = require('http');
-// const PORT = 8080;
+
 const employees = [];
 addEmployee();
 function addEmployee() {
@@ -91,46 +90,9 @@ function addEmployee() {
 
 function startHtml() {
     template;
-    // const empCards = emps.map(info => info.renderHTML()).join('\n')
-    // fs.writeFileSync("./test.html", template.replace("{{employees}}", empCards))
+
 
 }
 
-// function addHtml(){
-//     return new Promise(function(resolve, reject){
-//         const empCards = emps.map(info => info.renderHTML()).join('\n')
-//         if(Engineer == true){
-//             Engineer.renderHTML();
-//         } else if (Intern == true){
-//             Intern.renderHTML();
-//         } else {
-//             Manager.renderHTML();
-//         }
-//         console.log("member addition");
-//         fs.appendFile("./test.html", template.replace("{{employees}}", data, function(err) {
-//             if (err) {
-//                 return reject(err);
-//             }
-//             return resolve();
-//         }))
 
-//     })
-
-// }
-
-// const handleRequest = (req, res) => {
-//     fs.readFile(`${__dirname}/index.html`, (err, data) => {
-//         if (err) throw err;
-
-//         res.writeHead(200, { 'Content-Type' : 'text/html'});
-//         res.end(data);
-//     });
-// };
-// const server = http.createServer(handleRequest);
-
-// server.listen(PORT, () => {
-//     console.log(`Server is listening on PORT: http://localhost:${PORT}`);
-// })
-
-
-windows.open(startProg());
+startProg();
