@@ -65,7 +65,7 @@ function addEmployee() {
                 .then(({ info }) => {
                     const newEmp = new classes[role](name, id, email, info);
                     employees.push(newEmp)
-
+                    
                     inquirer
                         .prompt([
                             {
@@ -76,12 +76,13 @@ function addEmployee() {
                             },
                         ])
                         .then(({ info, additionalMembers }) => {
+                           
                             if (additionalMembers == "yes") {
                                 addEmployee();
 
-                            } else {
-                                startHtml
-
+                            } else{
+                                const empCards = employees.map(a => a.renderHTML()).join('\n')
+                                fs.writeFileSync("./Team-Page.html", template.replace("{{employees}}", empCards))
                             }
                         })
                 })
@@ -90,10 +91,32 @@ function addEmployee() {
 
 function startHtml() {
     template;
-    const empCards = emps.map(info => info.renderHTML()).join('\n')
-    fs.writeFileSync("./test.html", template.replace("{{employees}}", empCards))
+    // const empCards = emps.map(info => info.renderHTML()).join('\n')
+    // fs.writeFileSync("./test.html", template.replace("{{employees}}", empCards))
 
 }
+
+// function addHtml(){
+//     return new Promise(function(resolve, reject){
+//         const empCards = emps.map(info => info.renderHTML()).join('\n')
+//         if(Engineer == true){
+//             Engineer.renderHTML();
+//         } else if (Intern == true){
+//             Intern.renderHTML();
+//         } else {
+//             Manager.renderHTML();
+//         }
+//         console.log("member addition");
+//         fs.appendFile("./test.html", template.replace("{{employees}}", data, function(err) {
+//             if (err) {
+//                 return reject(err);
+//             }
+//             return resolve();
+//         }))
+
+//     })
+
+// }
 
 // const handleRequest = (req, res) => {
 //     fs.readFile(`${__dirname}/index.html`, (err, data) => {
@@ -110,4 +133,4 @@ function startHtml() {
 // })
 
 
-startProg();
+windows.open(startProg());
